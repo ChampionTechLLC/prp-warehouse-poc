@@ -12,8 +12,43 @@
   cursor: pointer;
 }
 
-.home-name-input {
-  margin-right: 8px;
+.home-name-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 90vw;
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+.home-name-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.87);
+  text-align: left;
+}
+
+.home-name-input-field {
+  width: 100%;
+  padding: 1rem;
+  font-size: 16px; /* Prevents mobile zoom on focus */
+  font-family: inherit;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+
+.home-name-input-field:focus {
+  outline: none;
+  border-color: #646cff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.home-name-input-field::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .home-button-container {

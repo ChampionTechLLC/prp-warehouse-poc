@@ -1,10 +1,15 @@
 import { useNavigate } from 'react-router-dom'
 
+import type { Bottle } from '../types/bottle'
 import { bottles } from '../data/bottles'
 import '../styles/pages/Scan.css'
 
 export default function Scan() {
   const navigate = useNavigate()
+
+  const onScan = (bottle: Bottle) => {
+    navigate('/bottle', { state: { bottle } })
+  }
 
   const handleSimulateScan = () => {
     if (bottles.length === 0) return
@@ -12,7 +17,7 @@ export default function Scan() {
     const randomIndex = Math.floor(Math.random() * bottles.length)
     const randomBottle = bottles[randomIndex]
 
-    navigate('/bottle', { state: { bottle: randomBottle } })
+    onScan(randomBottle)
   }
 
   return (

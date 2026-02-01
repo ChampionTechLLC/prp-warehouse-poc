@@ -23,12 +23,17 @@ export default function Home() {
       <h3 className="home-title" onClick={() => navigate('/admin')}>
         Warehouse Wine Scanner
       </h3>
-      <div>
-        <span className="home-name-input">Name:</span>
+      <div className="home-name-input-container">
+        <label htmlFor="name-input" className="home-name-label">
+          Name:
+        </label>
         <input
+          id="name-input"
           type="text"
           value={currentOrder?.name || ''}
           onChange={(e) => setName(e.target.value)}
+          placeholder="Enter your name"
+          className="home-name-input-field"
         />
       </div>
       <div className="home-button-container">

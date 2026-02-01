@@ -1,6 +1,8 @@
+import { useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import type { Order } from '../types/order'
+import { bottles } from '../data/bottles'
 import CartLineItem from '../components/CartLineItem'
 import { useOrder } from '../contexts/OrderContext'
 import '../styles/common.css'
@@ -16,6 +18,22 @@ export default function OrderReview() {
   const state = location.state as OrderLocationState | null
   const order = state?.order
   const { updateQty } = useOrder()
+
+  const { totalPrice, totalBottles } = useMemo(() => {
+    if (!order) return { totalPrice: 0, totalBottles: 0 }
+
+    const price = order.lineItems.reduce((sum, lineItem) => {
+      const bottle = bottles.find((b) => b.bottleId === lineItem.bottleId)
+      return sum + (bottle ? bottle.price * lineItem.qty : 0)
+    }, 0)
+
+    const bottleCount = order.lineItems.reduce(
+      (sum, lineItem) => sum + lineItem.qty,
+      0,
+    )
+
+    return { totalPrice: price, totalBottles: bottleCount }
+  }, [order])
 
   if (!order) {
     return (
@@ -59,6 +77,14 @@ export default function OrderReview() {
             >
               {order.status}
             </span>
+          </div>
+          <div>
+            <span className="info-label">Total Bottles:</span>
+            <span className="info-value">{totalBottles}</span>
+          </div>
+          <div>
+            <span className="info-label">Total Price:</span>
+            <span className="info-value">${totalPrice.toFixed(2)}</span>
           </div>
         </div>
       </div>

@@ -62,44 +62,72 @@ export default function Bottle() {
       <button
         type="button"
         onClick={() => navigate('/scan')}
-        className="bottle-back-button"
+        className="back-button"
       >
         ← Back to Scan
       </button>
 
       <div className="bottle-content">
-        <img
-          src="https://static.vecteezy.com/system/resources/thumbnails/044/813/102/small/black-wine-bottle-isolated-on-transparent-background-png.png"
-          alt={bottle.name}
-          className="bottle-image"
-        />
+        {bottle.imgUrl ? (
+          <img
+            src={bottle.imgUrl}
+            alt={bottle.name}
+            className="bottle-image"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement
+              target.style.display = 'none'
+            }}
+          />
+        ) : (
+          <div className="bottle-image-placeholder">No Image</div>
+        )}
 
         <h2 className="bottle-name">{bottle.name}</h2>
-        <p className="bottle-id">{bottle.bottleId}</p>
 
-        <div className="bottle-quantity-controls">
-          <button
-            type="button"
-            onClick={handleDecrement}
-            disabled={quantity === 0}
-            className="bottle-qty-button"
-          >
-            -
-          </button>
-          <input
-            type="number"
-            value={quantity}
-            onChange={handleQuantityChange}
-            min={0}
-            className="bottle-qty-input"
-          />
-          <button
-            type="button"
-            onClick={handleIncrement}
-            className="bottle-qty-button"
-          >
-            +
-          </button>
+        <div className="bottle-info">
+          <div className="bottle-price">${bottle.price.toFixed(2)}</div>
+          <div className="bottle-sku">SKU: {bottle.sku}</div>
+        </div>
+
+        <div className="bottle-description">
+          <h3>Description</h3>
+          <p>{bottle.description}</p>
+        </div>
+
+        <div className="bottle-quantity-section">
+          <label htmlFor="quantity" className="bottle-quantity-label">
+            Quantity:
+          </label>
+          <div className="bottle-quantity-controls">
+            <button
+              type="button"
+              onClick={handleDecrement}
+              disabled={quantity === 0}
+              className="bottle-qty-button"
+            >
+              -
+            </button>
+            <input
+              id="quantity"
+              type="number"
+              value={quantity}
+              onChange={handleQuantityChange}
+              min={0}
+              className="bottle-qty-input"
+            />
+            <button
+              type="button"
+              onClick={handleIncrement}
+              className="bottle-qty-button"
+            >
+              +
+            </button>
+          </div>
+          {quantity > 0 && (
+            <div className="bottle-total-price">
+              Total: ${(bottle.price * quantity).toFixed(2)}
+            </div>
+          )}
         </div>
       </div>
 
@@ -110,7 +138,7 @@ export default function Bottle() {
           disabled={quantity === 0}
           className="bottle-add-button"
         >
-          Add to Cart
+          Add {quantity > 0 ? `${quantity} ` : ''}to Cart
         </button>
       </div>
 

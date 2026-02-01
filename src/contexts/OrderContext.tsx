@@ -9,7 +9,7 @@ import {
 } from 'react'
 
 import type { LineItem, Order } from '../types/order'
-import { mockTransactions } from '../data/mockTransactions'
+import { mockOrders } from '../data/mockOrders'
 
 type OrderContextValue = {
   orders: Order[]
@@ -43,7 +43,7 @@ export function OrderProvider({ children }: PropsWithChildren) {
 
   const [orders, setOrders] = useState<Order[]>(() => [
     createEmptyOrder(initialOrderIdRef.current, '', 'in-progress'),
-    ...mockTransactions,
+    ...mockOrders,
   ])
 
   const currentOrder = useMemo(
