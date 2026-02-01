@@ -1,15 +1,7 @@
 import type { Order } from '../types/order'
 
 export const mockOrders: Order[] = [
-  {
-    orderId: 1001,
-    name: 'Alice Johnson',
-    lineItems: [
-      { lineItemId: 1, bottleId: 'PED18B', qty: 2 },
-      { lineItemId: 2, bottleId: 'ITU21D', qty: 1 },
-    ],
-    status: 'in-progress',
-  },
+
   {
     orderId: 1002,
     name: 'Brian Smith',
@@ -18,7 +10,7 @@ export const mockOrders: Order[] = [
       { lineItemId: 2, bottleId: 'PLBXXD', qty: 2 },
       { lineItemId: 3, bottleId: 'IMS21D', qty: 1 },
     ],
-    status: 'in-progress',
+    status: 'completed',
   },
   {
     orderId: 1003,
