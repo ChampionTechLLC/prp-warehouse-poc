@@ -9,7 +9,7 @@ import OrderReview from '../pages/OrderReview'
 
 export default function AppRouter() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/prp-warehouse-poc">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin" element={<Admin />} />
