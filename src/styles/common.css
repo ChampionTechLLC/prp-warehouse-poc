@@ -1,0 +1,265 @@
+/* Common/Shared Styles */
+
+/* Page Container - used across multiple pages */
+.page-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding-top: 60px;
+}
+
+/* Back Button - used across multiple pages */
+.back-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+  cursor: pointer;
+  font-size: 1em;
+  font-family: inherit;
+  font-weight: 500;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+
+.back-button:hover {
+  border-color: #646cff;
+  background-color: #2a2a2a;
+}
+
+/* Page Title */
+.page-title {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* Section Title */
+.section-title {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.section-title-spaced {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Section Container */
+.section-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.empty-state-large {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.empty-state-large p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Fixed Bottom Button Container */
+.fixed-bottom-button {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.fixed-bottom-button-small {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Primary Button */
+.primary-button {
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background-color: #646cff;
+  color: rgba(255, 255, 255, 0.87);
+  cursor: pointer;
+  font-size: 1.1em;
+  font-family: inherit;
+  font-weight: 600;
+  transition: background-color 0.25s, border-color 0.25s;
+}
+
+.primary-button:hover:not(:disabled) {
+  background-color: #535bf2;
+}
+
+.primary-button:disabled {
+  background-color: #3a3a3a;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Secondary Button */
+.secondary-button {
+  padding: 12px 40px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.secondary-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Quantity Control Button */
+.qty-button {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.87);
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.75rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-button:hover {
+  color: #646cff;
+}
+
+.qty-button:disabled {
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+}
+
+/* Quantity Input */
+.qty-input {
+  width: 60px;
+  height: 40px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Quantity Control Container */
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 30px;
+}
+
+/* Card/Item Container */
+.card-container {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Info Card */
+.info-card {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.87);
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+/* Status Colors */
+.status-completed {
+  color: #4caf50;
+}
+
+.status-in-progress {
+  color: #ffa726;
+}
+
+.status-text {
+  text-transform: capitalize;
+}
+
+/* Error Container */
+.error-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+}

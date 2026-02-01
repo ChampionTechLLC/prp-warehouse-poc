@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useOrder } from '../contexts/OrderContext'
 import type { Bottle } from '../types/bottle'
 import SuccessModal from '../components/SuccessModal'
+import '../styles/pages/Bottle.css'
 
 type BottleLocationState = {
   bottle?: Bottle
@@ -20,7 +21,7 @@ export default function Bottle() {
 
   if (!bottle) {
     return (
-      <div>
+      <div className="error-container">
         <p>No bottle data found.</p>
         <button type="button" onClick={() => navigate('/scan')}>
           Back to Scan
@@ -57,65 +58,31 @@ export default function Bottle() {
   }
 
   return (
-    <div style={{ position: 'relative', paddingBottom: '80px' }}>
+    <div className="bottle-container">
       <button
         type="button"
         onClick={() => navigate('/scan')}
-        style={{
-          position: 'fixed',
-          top: '10px',
-          left: '10px',
-        }}
+        className="bottle-back-button"
       >
         ← Back to Scan
       </button>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          paddingTop: '60px',
-        }}
-      >
+      <div className="bottle-content">
         <img
           src="https://static.vecteezy.com/system/resources/thumbnails/044/813/102/small/black-wine-bottle-isolated-on-transparent-background-png.png"
           alt={bottle.name}
-          style={{
-            width: '200px',
-            height: '300px',
-            borderRadius: '8px',
-            marginBottom: '20px',
-            objectFit: 'cover',
-          }}
+          className="bottle-image"
         />
 
-        <h2>{bottle.name}</h2>
-        <p style={{ color: '#666' }}>{bottle.bottleId}</p>
+        <h2 className="bottle-name">{bottle.name}</h2>
+        <p className="bottle-id">{bottle.bottleId}</p>
 
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            marginTop: '30px',
-          }}
-        >
+        <div className="bottle-quantity-controls">
           <button
             type="button"
             onClick={handleDecrement}
             disabled={quantity === 0}
-            style={{
-              width: '40px',
-              height: '40px',
-              fontSize: '20px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              cursor: quantity === 0 ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            className="bottle-qty-button"
           >
             -
           </button>
@@ -124,56 +91,24 @@ export default function Bottle() {
             value={quantity}
             onChange={handleQuantityChange}
             min={0}
-            style={{
-              width: '60px',
-              height: '40px',
-              textAlign: 'center',
-              fontSize: '16px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-            }}
+            className="bottle-qty-input"
           />
           <button
             type="button"
             onClick={handleIncrement}
-            style={{
-              width: '40px',
-              height: '40px',
-              fontSize: '20px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            className="bottle-qty-button"
           >
             +
           </button>
         </div>
       </div>
 
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-        }}
-      >
+      <div className="bottle-add-button-container">
         <button
           type="button"
           onClick={handleAddToCart}
           disabled={quantity === 0}
-          style={{
-            padding: '12px 40px',
-            fontSize: '16px',
-            backgroundColor: quantity === 0 ? '#ccc' : '#007bff',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: quantity === 0 ? 'not-allowed' : 'pointer',
-          }}
+          className="bottle-add-button"
         >
           Add to Cart
         </button>

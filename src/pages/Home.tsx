@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import { useOrder } from '../contexts/OrderContext'
+import '../styles/pages/Home.css'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -15,38 +16,32 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <div>
+    <div className="home-container">
+      <div className="home-logo">
         <img src="https://www.prpwine.com/wp-content/uploads/PRPWine_Logo.svg" alt="WineFinder" />
       </div>
-      <h3
-        style={{ cursor: 'pointer' }}
-        onClick={() => navigate('/admin')}
-      >
+      <h3 className="home-title" onClick={() => navigate('/admin')}>
         Warehouse Wine Scanner
       </h3>
       <div>
-        <span style={{ marginRight: '8px' }}>Name:</span>
+        <span className="home-name-input">Name:</span>
         <input
           type="text"
           value={currentOrder?.name || ''}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
-      <div style={{ marginTop: '20px' }}>
+      <div className="home-button-container">
         <button
           type="button"
           onClick={handleStartScanning}
           disabled={!canStartScanning}
-          style={{
-            cursor: canStartScanning ? 'pointer' : 'not-allowed',
-            opacity: canStartScanning ? 1 : 0.5,
-          }}
+          className="home-button"
         >
           Start scanning
         </button>
       </div>
-      <div style={{ marginTop: '10px' }}>
+      <div className="home-button-container-small">
         <button
           type="button"
           onClick={() => navigate('/cart')}

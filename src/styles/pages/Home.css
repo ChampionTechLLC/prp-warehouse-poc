@@ -1,0 +1,34 @@
+@import '../common.css';
+
+.home-container {
+  /* Add any home-specific styles here */
+}
+
+.home-logo {
+  /* Logo container styles if needed */
+}
+
+.home-title {
+  cursor: pointer;
+}
+
+.home-name-input {
+  margin-right: 8px;
+}
+
+.home-button-container {
+  margin-top: 20px;
+}
+
+.home-button-container-small {
+  margin-top: 10px;
+}
+
+.home-button {
+  cursor: pointer;
+}
+
+.home-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

@@ -1,0 +1,10 @@
+@import '../common.css';
+
+.order-review-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-size: 2rem;
+  font-weight: 600;
+}

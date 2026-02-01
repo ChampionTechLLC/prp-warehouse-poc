@@ -1,0 +1,93 @@
+@import '../common.css';
+
+.bottle-container {
+  position: relative;
+  padding-bottom: 80px;
+}
+
+.bottle-back-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}
+
+.bottle-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+}
+
+.bottle-image {
+  width: 200px;
+  height: 300px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  object-fit: cover;
+}
+
+.bottle-name {
+  /* Add styles if needed */
+}
+
+.bottle-id {
+  color: #666;
+}
+
+.bottle-quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 30px;
+}
+
+.bottle-qty-button {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.bottle-qty-button:disabled {
+  cursor: not-allowed;
+}
+
+.bottle-qty-input {
+  width: 60px;
+  height: 40px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.bottle-add-button-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bottle-add-button {
+  padding: 12px 40px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.bottle-add-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.bottle-add-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
