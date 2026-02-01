@@ -79,7 +79,7 @@ export default function Bottle() {
         }}
       >
         <img
-          src="https://imgs.search.brave.com/8KdyVArV4VU2lvlc6PBKXEqkbkVs0JxHgxgFaDCc8cM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cHJvcG5zcG9vbi5j/b20vbWVkaWEvY2F0/YWxvZy9wcm9kdWN0/L2NhY2hlLzEvdGh1/bWJuYWlsLzlkZjc4/ZWFiMzM1MjVkMDhk/NmU1ZmI4ZDI3MTM2/ZTk1LzcvOC83ODI1/Ni5qcGc"
+          src="https://static.vecteezy.com/system/resources/thumbnails/044/813/102/small/black-wine-bottle-isolated-on-transparent-background-png.png"
           alt={bottle.name}
           style={{
             width: '200px',
