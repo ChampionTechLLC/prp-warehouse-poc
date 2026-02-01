@@ -35,7 +35,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="page-container">
+    <div className="page-container cart-page">
       <button
         type="button"
         onClick={() => navigate('/')}

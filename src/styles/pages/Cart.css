@@ -1,5 +1,14 @@
 @import '../common.css';
 
+/* Ensure cart page has enough bottom padding for fixed button */
+.cart-page {
+  padding-bottom: 200px; /* Space for fixed bottom button and total price */
+}
+
+.card-container {
+  padding-bottom: 1rem;
+}
+
 .cart-total-price {
   font-size: 1.5rem;
   font-weight: 700;
@@ -20,4 +29,14 @@
   align-items: center;
   width: 90vw;
   max-width: 90vw;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(
+    to top,
+    rgba(26, 26, 26, 0.95) 0%,
+    rgba(26, 26, 26, 0.98) 50%,
+    rgba(26, 26, 26, 1) 100%
+  );
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
 }
