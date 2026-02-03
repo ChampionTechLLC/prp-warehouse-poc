@@ -9,11 +9,10 @@ import '../styles/pages/Scan.css'
 export default function Scan() {
   const navigate = useNavigate()
   const scannerRef = useRef<Html5Qrcode | null>(null)
-  // const lastScanTimeRef = useRef<number>(0)
+  const lastScanTimeRef = useRef<number>(0)
   const [isMobile, setIsMobile] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isScanning, setIsScanning] = useState(false)
-  const [scannedValue, setScannedValue] = useState<string | null>(null)
   const scannerElementId = 'html5qr-code-full-region'
 
   useEffect(() => {
@@ -26,69 +25,30 @@ export default function Scan() {
     }
 
 
-    const onScan = (bottle: any) => {
-      navigate('/bottle', { state: { bottle } })
-    }
-
-    const handleSimulateScan = () => {
-      if (bottles.length === 0) return
-
-      const randomIndex = Math.floor(Math.random() * bottles.length)
-      const randomBottle = bottles[randomIndex]
-
-      onScan(randomBottle)
-    }
-
     // Callback functions for scanning
     const onScanSuccess = (decodedText: string) => {
-      console.log('decodedText', decodedText)
-      setScannedValue(decodedText)
-      handleSimulateScan()
+      const now = Date.now()
+      // Prevent processing the same scan within 500ms (debounce)
+      if (now - lastScanTimeRef.current < 500) {
+        return
+      }
+      lastScanTimeRef.current = now
 
-      ///// THIS IS THE REAL CODE TO FIND AND NAVIGATE
       // Match scanned code to bottle SKU or bottleId
-      // const matchedBottle = bottles.find(
-      //   (bottle) =>
-      //     bottle.sku === decodedText || bottle.bottleId === decodedText,
-      // )
+      const matchedBottle = bottles.find(
+        (bottle) =>
+          (bottle.sku).toLowerCase() === (decodedText).toLowerCase(),
+      )
 
-      // if (matchedBottle) {
-      //   // Stop scanning before navigation
-      //   if (scannerRef.current) {
-      //     scannerRef.current.stop().catch(console.error)
-      //   }
-      //   navigate('/bottle', { state: { bottle: matchedBottle } })
-      // }
+      if (matchedBottle) {
+        // Stop scanning before navigation
+        // if (scannerRef.current) {
+        //   scannerRef.current.stop().catch(console.error)
+        // }
+        navigate('/bottle', { state: { bottle: matchedBottle } })
+      }
       // If no match found, continue scanning (silently ignore)
-      ////// END REAL CODE TO FIND AND NAVIGATE
     }
-
-    // Callback functions for scanning
-    // const onScanSuccess = (decodedText: string) => {
-    //   const now = Date.now()
-    //   // Prevent processing the same scan within 500ms (debounce)
-    //   if (now - lastScanTimeRef.current < 500) {
-    //     return
-    //   }
-    //   lastScanTimeRef.current = now
-
-    //   console.log('Scanned code:', decodedText)
-
-    //   // Match scanned code to bottle SKU or bottleId
-    //   const matchedBottle = bottles.find(
-    //     (bottle) =>
-    //       bottle.sku === decodedText || bottle.bottleId === decodedText,
-    //   )
-
-    //   if (matchedBottle) {
-    //     // Stop scanning before navigation
-    //     if (scannerRef.current) {
-    //       scannerRef.current.stop().catch(console.error)
-    //     }
-    //     navigate('/bottle', { state: { bottle: matchedBottle } })
-    //   }
-    //   // If no match found, continue scanning (silently ignore)
-    // }
 
     const onScanFailure = () => {
       // Ignore scan failures - they happen frequently when no code is in view
@@ -117,63 +77,32 @@ export default function Scan() {
         const html5QrCode = new Html5Qrcode(scannerElementId)
         scannerRef.current = html5QrCode
 
-        // Try to get available cameras first for better error messages
-        let cameras: Array<{ id: string; label: string }> = []
-        try {
-          cameras = await Html5Qrcode.getCameras()
-        } catch (camErr) {
-          console.error('Error getting cameras:', camErr)
-          // If getCameras fails, try with facingMode constraint instead
-        }
-
         const config = {
-          fps: 15, // Optimized for faster processing
-          qrbox: { width: 300, height: 300 }, // Slightly larger scanning area
-          aspectRatio: 1.0,
-          disableFlip: false, // Allow rotation detection
+          fps: 20, // Try to decode more frames per second
+          qrbox: { width: 400, height: 150 }, // Rectangular scan area for linear barcode (CODE_128)
+          disableFlip: true, // Skip mirrored barcode decoding if unnecessary
           videoConstraints: {
-            width: { ideal: 640 },
-            height: { ideal: 480 },
-          }, // Lower resolution for 50-70% faster detection
-          formatsToSupport: [
-            Html5QrcodeSupportedFormats.QR_CODE,
-            Html5QrcodeSupportedFormats.CODE_128,
-            Html5QrcodeSupportedFormats.CODE_39,
-            Html5QrcodeSupportedFormats.EAN_13,
-            Html5QrcodeSupportedFormats.EAN_8,
-            Html5QrcodeSupportedFormats.UPC_A,
-            Html5QrcodeSupportedFormats.UPC_E,
-            Html5QrcodeSupportedFormats.CODE_93,
-            Html5QrcodeSupportedFormats.CODABAR,
-            Html5QrcodeSupportedFormats.ITF,
-          ], // Explicitly enable barcode formats for faster detection
+            facingMode: 'environment', // Always use back camera
+            width: { ideal: 480 }, // Lower resolution → faster JS decoding
+            height: { ideal: 360 },
+          },
+          formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128], // Scan CODE_128 barcode
         }
 
-        // If we have cameras, use the back camera, otherwise use facingMode constraint
-        if (cameras.length > 0) {
-          // Find back camera (environment facing)
-          const backCamera = cameras.find(
-            (camera) =>
-              camera.label.toLowerCase().includes('back') ||
-              camera.label.toLowerCase().includes('rear') ||
-              camera.label.toLowerCase().includes('environment'),
-          )
+        // Always use back camera (environment facing) - never use front camera
+        await html5QrCode.start(
+          { facingMode: 'environment' },
+          config,
+          onScanSuccess,
+          onScanFailure,
+        )
 
-          const cameraId = backCamera?.id || cameras[0].id
-          await html5QrCode.start(
-            cameraId,
-            config,
-            onScanSuccess,
-            onScanFailure,
-          )
-        } else {
-          // Fallback to facingMode constraint (works on most mobile devices)
-          await html5QrCode.start(
-            { facingMode: 'environment' },
-            config,
-            onScanSuccess,
-            onScanFailure,
-          )
+        // Force video inline so iOS Safari does not auto-open QR codes
+        const video = document.querySelector(`#${scannerElementId} video`) as HTMLVideoElement | null
+        if (video) {
+          video.setAttribute('playsinline', 'true')
+          video.setAttribute('webkit-playsinline', 'true')
+          video.style.pointerEvents = 'none' // prevent Safari overlay tap
         }
         
         setIsScanning(true)
@@ -229,33 +158,28 @@ export default function Scan() {
     // Cleanup on unmount
     return () => {
       if (scannerRef.current) {
-        scannerRef.current
+        const scanner = scannerRef.current
+        scannerRef.current = null // Clear ref first to prevent re-use
+        scanner
           .stop()
           .then(() => {
-            scannerRef.current?.clear()
-            scannerRef.current = null
+            scanner.clear()
           })
           .catch((err) => {
             console.error('Error stopping scanner:', err)
+            // Try to clear even if stop fails
+            try {
+              scanner.clear()
+            } catch (clearErr) {
+              console.error('Error clearing scanner:', clearErr)
+            }
           })
       }
     }
   }, [navigate])
 
-  const handleBack = async () => {
-    if (scannerRef.current) {
-      try {
-        await scannerRef.current.stop()
-        scannerRef.current.clear()
-      } catch (err) {
-        console.error('Error stopping scanner:', err)
-      } finally {
-        // Always navigate, even if cleanup fails
-        navigate('/')
-      }
-    } else {
-      navigate('/')
-    }
+  const handleBack = () => {
+    navigate('/')
   }
 
   if (!isMobile) {
@@ -319,9 +243,6 @@ export default function Scan() {
 
       {isScanning && (
         <div className="scan-view-cart-container">
-          {scannedValue && (
-            <div className="scan-scanned-value">{scannedValue}</div>
-          )}
           <button
             type="button"
             onClick={() => navigate('/cart')}
