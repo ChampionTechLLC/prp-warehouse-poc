@@ -6,6 +6,7 @@ import { bottles } from '../data/bottles'
 import { isMobileDevice } from '../utils/deviceDetection'
 import ScannerOverlay from '../components/ScannerOverlay'
 import '../styles/pages/Scan.css'
+import type { Bottle } from '../types/bottle'
 
 export default function Scan() {
   const navigate = useNavigate()
@@ -24,22 +25,40 @@ export default function Scan() {
       return
     }
 
+
+    const onScan = (bottle: Bottle) => {
+        navigate('/bottle', { state: { bottle } })
+      }
+
+      const handleSimulateScan = () => {
+        if (bottles.length === 0) return
+
+        const randomIndex = Math.floor(Math.random() * bottles.length)
+        const randomBottle = bottles[randomIndex]
+
+        onScan(randomBottle)
+      }
+
     // Callback functions for scanning
     const onScanSuccess = (decodedText: string) => {
-      // Match scanned code to bottle SKU or bottleId
-      const matchedBottle = bottles.find(
-        (bottle) =>
-          bottle.sku === decodedText || bottle.bottleId === decodedText,
-      )
+        handleSimulateScan()
 
-      if (matchedBottle) {
-        // Stop scanning before navigation
-        if (scannerRef.current) {
-          scannerRef.current.stop().catch(console.error)
-        }
-        navigate('/bottle', { state: { bottle: matchedBottle } })
-      }
+      ///// THIS IS THE REAL CODE TO FIND AND NAVIGATE
+      // Match scanned code to bottle SKU or bottleId
+      // const matchedBottle = bottles.find(
+      //   (bottle) =>
+      //     bottle.sku === decodedText || bottle.bottleId === decodedText,
+      // )
+
+      // if (matchedBottle) {
+      //   // Stop scanning before navigation
+      //   if (scannerRef.current) {
+      //     scannerRef.current.stop().catch(console.error)
+      //   }
+      //   navigate('/bottle', { state: { bottle: matchedBottle } })
+      // }
       // If no match found, continue scanning (silently ignore)
+      ////// END REAL CODE TO FIND AND NAVIGATE
     }
 
     const onScanFailure = () => {
