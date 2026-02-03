@@ -25,48 +25,34 @@ export default function Scan() {
     }
 
 
-    // Callback functions for scanning
     const onScanSuccess = (decodedText: string) => {
       const now = Date.now()
-      // Prevent processing the same scan within 500ms (debounce)
       if (now - lastScanTimeRef.current < 500) {
         return
       }
       lastScanTimeRef.current = now
 
-      // Match scanned code to bottle SKU or bottleId
       const matchedBottle = bottles.find(
         (bottle) =>
           (bottle.sku).toLowerCase() === (decodedText).toLowerCase(),
       )
 
       if (matchedBottle) {
-        // Stop scanning before navigation
-        // if (scannerRef.current) {
-        //   scannerRef.current.stop().catch(console.error)
-        // }
         navigate('/bottle', { state: { bottle: matchedBottle } })
       }
-      // If no match found, continue scanning (silently ignore)
     }
 
     const onScanFailure = () => {
-      // Ignore scan failures - they happen frequently when no code is in view
-      // Only log if needed for debugging
     }
 
-    // Initialize scanner - wait for DOM element to be ready
     const initScanner = async () => {
-      // Check if HTTPS (required for camera access)
       if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
         setError('Camera access requires HTTPS. Please access this page over a secure connection.')
         return
       }
 
-      // Wait a bit to ensure DOM is ready
       await new Promise((resolve) => setTimeout(resolve, 100))
 
-      // Check if element exists
       const element = document.getElementById(scannerElementId)
       if (!element) {
         setError('Scanner element not found. Please refresh the page.')
@@ -78,32 +64,23 @@ export default function Scan() {
         scannerRef.current = html5QrCode
 
         const config = {
-          fps: 20, // Try to decode more frames per second
-          qrbox: { width: 400, height: 150 }, // Rectangular scan area for linear barcode (CODE_128)
-          disableFlip: true, // Skip mirrored barcode decoding if unnecessary
+          fps: 20,
+          qrbox: { width: 400, height: 150 },
+          disableFlip: true,
           videoConstraints: {
-            facingMode: 'environment', // Always use back camera
-            width: { ideal: 480 }, // Lower resolution → faster JS decoding
+            facingMode: 'environment',
+            width: { ideal: 480 },
             height: { ideal: 360 },
           },
-          formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128], // Scan CODE_128 barcode
+          formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128],
         }
 
-        // Always use back camera (environment facing) - never use front camera
         await html5QrCode.start(
           { facingMode: 'environment' },
           config,
           onScanSuccess,
           onScanFailure,
         )
-
-        // Force video inline so iOS Safari does not auto-open QR codes
-        const video = document.querySelector(`#${scannerElementId} video`) as HTMLVideoElement | null
-        if (video) {
-          video.setAttribute('playsinline', 'true')
-          video.setAttribute('webkit-playsinline', 'true')
-          video.style.pointerEvents = 'none' // prevent Safari overlay tap
-        }
         
         setIsScanning(true)
       } catch (err) {
@@ -155,11 +132,10 @@ export default function Scan() {
 
     initScanner()
 
-    // Cleanup on unmount
     return () => {
       if (scannerRef.current) {
         const scanner = scannerRef.current
-        scannerRef.current = null // Clear ref first to prevent re-use
+        scannerRef.current = null
         scanner
           .stop()
           .then(() => {
@@ -167,7 +143,6 @@ export default function Scan() {
           })
           .catch((err) => {
             console.error('Error stopping scanner:', err)
-            // Try to clear even if stop fails
             try {
               scanner.clear()
             } catch (clearErr) {
