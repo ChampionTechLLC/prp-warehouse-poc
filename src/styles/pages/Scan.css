@@ -6,33 +6,48 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   box-sizing: border-box;
   background-color: #000;
   color: #fff;
+}
+
+.scanner-video-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.scanner-video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanner-video-container canvas {
+  display: none;
+}
+
+.scan-error-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
 }
 
-.scan-viewfinder {
-  width: 70%;
-  max-width: 400px;
-  height: 40%;
-  border: 2px solid #b84a4a;
-  box-sizing: border-box;
-  background-image: url('https://imgs.search.brave.com/QoDoUb-j_oqpdr_-EdZT1dzrRwBS5YuHGpHN-UKdMtc/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9qYW1l/c3RoZXdpbmVndXku/d29yZHByZXNzLmNv/bS93cC1jb250ZW50/L3VwbG9hZHMvMjAx/MS8wNC90aGUtZmly/c3QtZXZlci1xci1j/b2RlLW9uLWEtYm90/dGxlLW9mLXdpbmUt/dGhhdC1pLWhhdmUt/c2Vlbi0xLmpwZWc_/dz0zMDAmaD0yMjQ');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+.scan-error-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.87);
+  margin-bottom: 1rem;
 }
 
-.scan-button-container {
-  margin-top: 40px;
-}
-
-.scan-button-container-small {
-  margin-top: 12px;
+.scan-error-message {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  max-width: 500px;
 }
