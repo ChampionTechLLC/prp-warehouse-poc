@@ -25,24 +25,23 @@ export default function Scan() {
       return
     }
 
-
     const onScan = (bottle: Bottle) => {
-        navigate('/bottle', { state: { bottle } })
-      }
+      navigate('/bottle', { state: { bottle } })
+    }
 
-      const handleSimulateScan = () => {
-        if (bottles.length === 0) return
+    const handleSimulateScan = () => {
+      if (bottles.length === 0) return
 
-        const randomIndex = Math.floor(Math.random() * bottles.length)
-        const randomBottle = bottles[randomIndex]
+      const randomIndex = Math.floor(Math.random() * bottles.length)
+      const randomBottle = bottles[randomIndex]
 
-        onScan(randomBottle)
-      }
+      onScan(randomBottle)
+    }
 
     // Callback functions for scanning
     const onScanSuccess = (decodedText: string) => {
       console.log('decodedText', decodedText)
-        handleSimulateScan()
+      handleSimulateScan()
 
       ///// THIS IS THE REAL CODE TO FIND AND NAVIGATE
       // Match scanned code to bottle SKU or bottleId
@@ -67,39 +66,115 @@ export default function Scan() {
       // Only log if needed for debugging
     }
 
-    // Initialize scanner
+    // Initialize scanner - wait for DOM element to be ready
     const initScanner = async () => {
+      // Check if HTTPS (required for camera access)
+      if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+        setError('Camera access requires HTTPS. Please access this page over a secure connection.')
+        return
+      }
+
+      // Wait a bit to ensure DOM is ready
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      // Check if element exists
+      const element = document.getElementById(scannerElementId)
+      if (!element) {
+        setError('Scanner element not found. Please refresh the page.')
+        return
+      }
+
       try {
         const html5QrCode = new Html5Qrcode(scannerElementId)
         scannerRef.current = html5QrCode
+
+        // Try to get available cameras first for better error messages
+        let cameras: Array<{ id: string; label: string }> = []
+        try {
+          cameras = await Html5Qrcode.getCameras()
+        } catch (camErr) {
+          console.error('Error getting cameras:', camErr)
+          // If getCameras fails, try with facingMode constraint instead
+        }
 
         const config = {
           fps: 10,
           qrbox: { width: 250, height: 250 },
           aspectRatio: 1.0,
-          facingMode: 'environment', // Use back camera
         }
 
-        await html5QrCode.start(
-          { facingMode: 'environment' },
-          config,
-          onScanSuccess,
-          onScanFailure,
-        )
+        // If we have cameras, use the back camera, otherwise use facingMode constraint
+        if (cameras.length > 0) {
+          // Find back camera (environment facing)
+          const backCamera = cameras.find(
+            (camera) =>
+              camera.label.toLowerCase().includes('back') ||
+              camera.label.toLowerCase().includes('rear') ||
+              camera.label.toLowerCase().includes('environment'),
+          )
+
+          const cameraId = backCamera?.id || cameras[0].id
+          await html5QrCode.start(
+            cameraId,
+            config,
+            onScanSuccess,
+            onScanFailure,
+          )
+        } else {
+          // Fallback to facingMode constraint (works on most mobile devices)
+          await html5QrCode.start(
+            { facingMode: 'environment' },
+            config,
+            onScanSuccess,
+            onScanFailure,
+          )
+        }
+        
         setIsScanning(true)
       } catch (err) {
         console.error('Error starting scanner:', err)
+        let errorMessage = 'Failed to start camera scanner.'
+        
         if (err instanceof Error) {
-          if (err.message.includes('Permission denied')) {
-            setError('Camera permission denied. Please allow camera access.')
-          } else if (err.message.includes('No camera found')) {
-            setError('No camera found on this device.')
+          const errMsg = err.message.toLowerCase()
+          const errName = err.name?.toLowerCase() || ''
+          console.error('Full error details:', {
+            name: err.name,
+            message: err.message,
+            stack: err.stack,
+          })
+          
+          if (
+            errMsg.includes('permission') ||
+            errMsg.includes('not allowed') ||
+            errMsg.includes('denied') ||
+            errName.includes('notallowederror')
+          ) {
+            errorMessage =
+              'Camera permission denied. Please allow camera access in your browser settings and refresh the page.'
+          } else if (
+            errMsg.includes('not found') ||
+            errMsg.includes('no camera') ||
+            errName.includes('notfounderror')
+          ) {
+            errorMessage = 'No camera found on this device.'
+          } else if (
+            errMsg.includes('not readable') ||
+            errMsg.includes('in use') ||
+            errMsg.includes('overconstrained') ||
+            errName.includes('notreadableerror')
+          ) {
+            errorMessage =
+              'Camera is already in use by another application. Please close other apps using the camera.'
+          } else if (errMsg.includes('constraint')) {
+            errorMessage =
+              'Camera constraints not supported. Your device may not have a back camera.'
           } else {
-            setError(`Failed to start camera: ${err.message}`)
+            errorMessage = `Failed to start camera: ${err.message || 'Unknown error'}`
           }
-        } else {
-          setError('Failed to start camera scanner.')
         }
+        
+        setError(errorMessage)
       }
     }
 
