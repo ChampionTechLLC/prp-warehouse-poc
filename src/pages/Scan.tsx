@@ -4,7 +4,6 @@ import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode'
 
 import { bottles } from '../data/bottles'
 import { isMobileDevice } from '../utils/deviceDetection'
-import ScannerOverlay from '../components/ScannerOverlay'
 import '../styles/pages/Scan.css'
 
 export default function Scan() {
@@ -14,6 +13,7 @@ export default function Scan() {
   const [isMobile, setIsMobile] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isScanning, setIsScanning] = useState(false)
+  const [scannedValue, setScannedValue] = useState<string | null>(null)
   const scannerElementId = 'html5qr-code-full-region'
 
   useEffect(() => {
@@ -42,6 +42,7 @@ export default function Scan() {
     // Callback functions for scanning
     const onScanSuccess = (decodedText: string) => {
       console.log('decodedText', decodedText)
+      setScannedValue(decodedText)
       handleSimulateScan()
 
       ///// THIS IS THE REAL CODE TO FIND AND NAVIGATE
@@ -311,7 +312,18 @@ export default function Scan() {
       <div id={scannerElementId} className="scanner-video-container" />
 
       {isScanning && (
-        <ScannerOverlay onViewCart={() => navigate('/cart')} />
+        <div className="scan-view-cart-container">
+          {scannedValue && (
+            <div className="scan-scanned-value">{scannedValue}</div>
+          )}
+          <button
+            type="button"
+            onClick={() => navigate('/cart')}
+            className="scan-view-cart-button"
+          >
+            View Cart
+          </button>
+        </div>
       )}
     </div>
   )
