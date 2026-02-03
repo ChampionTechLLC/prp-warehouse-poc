@@ -10,7 +10,7 @@ import '../styles/pages/Scan.css'
 export default function Scan() {
   const navigate = useNavigate()
   const scannerRef = useRef<Html5Qrcode | null>(null)
-  const lastScanTimeRef = useRef<number>(0)
+  // const lastScanTimeRef = useRef<number>(0)
   const [isMobile, setIsMobile] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isScanning, setIsScanning] = useState(false)
