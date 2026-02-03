@@ -41,6 +41,7 @@ export default function Scan() {
 
     // Callback functions for scanning
     const onScanSuccess = (decodedText: string) => {
+      console.log('decodedText', decodedText)
         handleSimulateScan()
 
       ///// THIS IS THE REAL CODE TO FIND AND NAVIGATE
