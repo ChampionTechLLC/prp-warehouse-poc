@@ -1,6 +1,10 @@
 import '../styles/components/ScannerOverlay.css'
 
-export default function ScannerOverlay() {
+type ScannerOverlayProps = {
+  onViewCart?: () => void
+}
+
+export default function ScannerOverlay({ onViewCart }: ScannerOverlayProps) {
   return (
     <div className="scanner-overlay">
       <div className="scanner-viewfinder">
@@ -12,6 +16,17 @@ export default function ScannerOverlay() {
       <div className="scanner-instructions">
         <p>Position the barcode or QR code within the frame</p>
       </div>
+      {onViewCart && (
+        <div className="scanner-view-cart-container">
+          <button
+            type="button"
+            onClick={onViewCart}
+            className="scanner-view-cart-button"
+          >
+            View Cart
+          </button>
+        </div>
+      )}
     </div>
   )
 }

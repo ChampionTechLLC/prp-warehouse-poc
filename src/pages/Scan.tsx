@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Html5Qrcode } from 'html5-qrcode'
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode'
 
 import { bottles } from '../data/bottles'
 import { isMobileDevice } from '../utils/deviceDetection'
 import ScannerOverlay from '../components/ScannerOverlay'
 import '../styles/pages/Scan.css'
-import type { Bottle } from '../types/bottle'
 
 export default function Scan() {
   const navigate = useNavigate()
   const scannerRef = useRef<Html5Qrcode | null>(null)
+  const lastScanTimeRef = useRef<number>(0)
   const [isMobile, setIsMobile] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isScanning, setIsScanning] = useState(false)
@@ -25,7 +25,8 @@ export default function Scan() {
       return
     }
 
-    const onScan = (bottle: Bottle) => {
+
+    const onScan = (bottle: any) => {
       navigate('/bottle', { state: { bottle } })
     }
 
@@ -60,6 +61,33 @@ export default function Scan() {
       // If no match found, continue scanning (silently ignore)
       ////// END REAL CODE TO FIND AND NAVIGATE
     }
+
+    // Callback functions for scanning
+    // const onScanSuccess = (decodedText: string) => {
+    //   const now = Date.now()
+    //   // Prevent processing the same scan within 500ms (debounce)
+    //   if (now - lastScanTimeRef.current < 500) {
+    //     return
+    //   }
+    //   lastScanTimeRef.current = now
+
+    //   console.log('Scanned code:', decodedText)
+
+    //   // Match scanned code to bottle SKU or bottleId
+    //   const matchedBottle = bottles.find(
+    //     (bottle) =>
+    //       bottle.sku === decodedText || bottle.bottleId === decodedText,
+    //   )
+
+    //   if (matchedBottle) {
+    //     // Stop scanning before navigation
+    //     if (scannerRef.current) {
+    //       scannerRef.current.stop().catch(console.error)
+    //     }
+    //     navigate('/bottle', { state: { bottle: matchedBottle } })
+    //   }
+    //   // If no match found, continue scanning (silently ignore)
+    // }
 
     const onScanFailure = () => {
       // Ignore scan failures - they happen frequently when no code is in view
@@ -98,9 +126,22 @@ export default function Scan() {
         }
 
         const config = {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
+          fps: 30, // Increased from 10 to 30 for faster scanning
+          qrbox: { width: 300, height: 300 }, // Slightly larger scanning area
           aspectRatio: 1.0,
+          disableFlip: false, // Allow rotation detection
+          formatsToSupport: [
+            Html5QrcodeSupportedFormats.QR_CODE,
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.CODE_39,
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.EAN_8,
+            Html5QrcodeSupportedFormats.UPC_A,
+            Html5QrcodeSupportedFormats.UPC_E,
+            Html5QrcodeSupportedFormats.CODE_93,
+            Html5QrcodeSupportedFormats.CODABAR,
+            Html5QrcodeSupportedFormats.ITF,
+          ], // Explicitly enable barcode formats for faster detection
         }
 
         // If we have cameras, use the back camera, otherwise use facingMode constraint
@@ -269,7 +310,9 @@ export default function Scan() {
 
       <div id={scannerElementId} className="scanner-video-container" />
 
-      {isScanning && <ScannerOverlay />}
+      {isScanning && (
+        <ScannerOverlay onViewCart={() => navigate('/cart')} />
+      )}
     </div>
   )
 }

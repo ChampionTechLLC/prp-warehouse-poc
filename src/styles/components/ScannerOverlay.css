@@ -73,3 +73,37 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   margin: 0;
 }
+
+.scanner-view-cart-container {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 101;
+  width: 90vw;
+  max-width: 400px;
+}
+
+.scanner-view-cart-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: rgba(100, 108, 255, 0.9);
+  color: #fff;
+  border: 2px solid rgba(100, 108, 255, 1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.scanner-view-cart-button:hover {
+  background-color: rgba(100, 108, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.scanner-view-cart-button:active {
+  transform: translateY(0);
+}
